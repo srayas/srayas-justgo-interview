@@ -11,7 +11,7 @@ interface AppDataContextType {
 
 export const AppDataContext = createContext<AppDataContextType>({
   appData: { user: defaultUserData, isLoggedIn: false },
-  setAppData: () => {}, // Placeholder
+  setAppData: () => {}, 
 });
 
 export const AppDataProvider = ({ children }:{children:React.ReactNode}) => {

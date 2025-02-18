@@ -29,16 +29,21 @@ export class AuthService {
     }
 
     generateMagicLink = async (username: string) => {
-        const token = crypto.randomBytes(32).toString('hex');
+        console.log("generateMagicLink")
+        let link=``;
+        const token = await this.generateToken(username) ;
         const expiresAt = new Date(Date.now() + config.MAGIC_LINK_EXPIRATION);
         const user=await  userService.getUserByUsername(username)
             if(user && user.id){
+                console.log("generateMagicLink",user)
                 createToken(user.id.toString(), token, expiresAt);
-                return `http://localhost:3000/magic-link/${token}`;
+                link=`http://localhost:3000/magic-link/${token}`;
             }
         else{
+            console.log("generateMagicLink",user)
             throw new Error("User not Found")
         }
+        return link
     }
 
     async getTokenByTokenValue(token: string) {

@@ -6,6 +6,7 @@ import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
 import { AppDataProvider, useAppData } from './providers/AppProvider'
 import Loader from './componets/global/loader';
+import VerifyLink from './pages/VerifyLink';
 
 function App() {
   const [appInitialized, setAppInitialized] = useState(false);
@@ -49,6 +50,7 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/magic-link/:token" element={<VerifyLink />} />
     </Routes>
   );
 }

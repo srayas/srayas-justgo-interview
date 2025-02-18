@@ -44,7 +44,8 @@ export const requestMagicLink = async (req: Request, res: Response): Promise<voi
             return;
         }
         try {
-            const link = authService.generateMagicLink(username);
+            const link = await authService.generateMagicLink(username);
+            console.log("link",link)
             res.json({ message: 'Magic link generated', link });
         } catch (error) {
             res.status(404).json({ error: 'User Not Found' });

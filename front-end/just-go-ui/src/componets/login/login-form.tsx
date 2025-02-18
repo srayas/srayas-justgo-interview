@@ -7,10 +7,12 @@ import { UserService } from '../../service/user-service';
 import { useNavigate } from 'react-router-dom';
 import { useAppData } from '../../providers/AppProvider';
 import { User } from '../../model/user';
+import Loader from '../global/loader';
 
 const LoginForm = () => {
   const [isRequestingLink, setIsRequestingLink] = useState(false);
   const navigate = useNavigate();
+  const [show ,setShow] = useState(true)
  const {appData,setAppData}= useAppData()
   const userSvc = new UserService();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -26,7 +28,15 @@ const LoginForm = () => {
   const onSubmit = async (data: LoginFormType) => {
     if (isRequestingLink) {
       console.log("Requesting Magic Link for:", data.username);
-      // Call API to send magic link
+      await userSvc.generatreMagicLink(data).then(data=>{
+        if(data){
+          setShow(false)
+          window.location.href=data
+        }
+      }).catch(error=>{
+        console.log("Authentication Error",error)
+      })
+      
     } else {
       if(data.password){
         const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -66,8 +76,13 @@ const LoginForm = () => {
     }
   },[])
 
+if(!show){
+  return (<><Loader/></>)
+}
+
   return (
-    <div id="login-form" className="main">
+    <>
+    {show &&<div id="login-form" className="main">
       <h1>Just Go Interview</h1>
       <h3>{isRequestingLink ? "Get Magic Link" : "Login with Password"}</h3>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -110,7 +125,9 @@ const LoginForm = () => {
       <p onClick={() => setIsRequestingLink(!isRequestingLink)} className="toggle-link">
         {isRequestingLink ? "Back to Login" : "Get Magic Link Instead"}
       </p>
-    </div>
+    </div>}
+    </>
+    
   );
 };
 

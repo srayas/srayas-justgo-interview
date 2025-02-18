@@ -19,6 +19,18 @@ export class UserService {
     }
   }
 
+  async generatreMagicLink(loginForm:LoginFormType){
+    try {
+      const response:any = await axiosHttp.post(`${this.baseUrl}/auth/magic-link`,loginForm);
+      const link= response.data.link
+      return link
+    } catch (error) {
+      localStorage.setItem("token", "");
+      console.error("Token is Expired", error);
+      throw new Error("Token validation failed");
+    }
+  }
+
   async authenticateUser(loginForm: LoginFormType) {
     return axiosHttp
       .post(`${this.baseUrl}/auth/login`, loginForm)
